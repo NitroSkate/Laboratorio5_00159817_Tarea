@@ -27,7 +27,7 @@ class Datos : AppCompatActivity() {
 
     fun init(pokemon: Pokemon){
         nombre.text = pokemon.nombre
-        tipo.text = pokemon.tipo
+        tipo.text = pokemon.url
     }
 
     private inner class FetchTask : AsyncTask<String, Void, String>() {

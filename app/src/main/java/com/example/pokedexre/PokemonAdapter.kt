@@ -7,7 +7,7 @@ import android.view.View
 import com.example.pokedexre.pojo.Pokemon
 import kotlinx.android.synthetic.main.elements.view.*
 
-class PokemonAdapter (val items : List<Pokemon>, val clickListener: (Pokemon) -> Unit) : RecyclerView.Adapter<PokemonAdapter.ViewHolder>(){
+class PokemonAdapter (val items : ArrayList<Pokemon>, val clickListener: (Pokemon) -> Unit) : RecyclerView.Adapter<PokemonAdapter.ViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.elements, parent, false)
         return ViewHolder(view)
@@ -22,7 +22,7 @@ class PokemonAdapter (val items : List<Pokemon>, val clickListener: (Pokemon) ->
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         fun bind(item: Pokemon, clickListener: (Pokemon) -> Unit) = with(itemView){
             pokemon_name.text = item.nombre
-            pokemon_type.text = item.tipo
+            pokemon_type.text = item.url
             this.setOnClickListener{clickListener(item)}
         }
     }

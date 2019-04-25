@@ -9,12 +9,13 @@
         tools:context="com.example.pokedexre.MainActivity">
 
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <LinearLayout
+                android:id="@+id/pmain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
 
 
 </LinearLayout>
