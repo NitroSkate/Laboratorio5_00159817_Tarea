@@ -2,6 +2,7 @@ package com.example.pokedexre
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -15,8 +16,11 @@ import com.example.pokedexre.pojo.AppConstants
 import com.example.pokedexre.pojo.Pokemon
 import com.example.pokedexre.utilities.NetworkUtils
 import kotlinx.android.synthetic.main.activity_main.*
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
+import java.net.MalformedURLException
+import java.net.URL
 
 class MainActivity : AppCompatActivity(), list_fragment.PokeListener {
 
@@ -27,8 +31,14 @@ class MainActivity : AppCompatActivity(), list_fragment.PokeListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        FetchPokemonTask().execute("")
-        pokelist = savedInstanceState?.getParcelableArrayList(AppConstants.salvar) ?: ArrayList()
+        //FetchPokemonTask().execute("")
+        if(savedInstanceState != null){
+            pokelist = savedInstanceState?.getParcelableArrayList(AppConstants.salvar) ?: ArrayList()
+            initFragment()
+        }
+        else{
+            FetchPokemonTask().execute("")
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -39,11 +49,10 @@ class MainActivity : AppCompatActivity(), list_fragment.PokeListener {
     fun initFragment(){
         mainFragment = list_fragment.newInstance(pokelist)
         val source = if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) R.id.pmain
-        else {/*
+        else {
             secondaryFragment = fragment_content.newInstance(Pokemon())
             supportFragmentManager.beginTransaction().replace(R.id.mainsecond, secondaryFragment).commit()
-            R.id.lmain*/
-            R.id.pmain
+            R.id.lmain
         }
         supportFragmentManager.beginTransaction().replace(source, mainFragment).commit()
     }
@@ -56,8 +65,10 @@ class MainActivity : AppCompatActivity(), list_fragment.PokeListener {
     }
 
     override fun manageLandscapeItemClick(pokemon: Pokemon) {
-        /*secondaryFragment = fragment_content(pokemon)
+        Log.d("url12", pokemon.url)
+        /*secondaryFragment = fragment_content.newInstance(pokemon.url)
         supportFragmentManager.beginTransaction().replace(R.id.mainsecond, secondaryFragment).commit()*/
+        QueryPokemonTask().execute(pokemon.url)
     }
 
     private inner class FetchPokemonTask : AsyncTask<String, Void, String>() {
@@ -99,6 +110,50 @@ class MainActivity : AppCompatActivity(), list_fragment.PokeListener {
                 }
             }
             initFragment()
+        }
+    }
+
+
+    private inner class QueryPokemonTask : AsyncTask<String, Void, String>() {
+        override fun doInBackground(vararg query: String): String {
+            if (query.isNullOrEmpty()) return ""
+
+            val url = query[0]
+            val pokeApi = Uri.parse(url).buildUpon().build()
+            val finalurl = try {
+                URL(pokeApi.toString())
+            } catch (e: MalformedURLException) {
+                URL("")
+            }
+
+            return try {
+                NetworkUtils().getResponseFromHttpUrl(finalurl)
+
+            } catch (e: IOException) {
+                e.printStackTrace()
+                ""
+            }
+        }
+
+        override fun onPostExecute(result: String) {
+            val pokemon = if (!result.isEmpty()) {
+                Log.d("json", result)
+                val root = JSONObject(result)
+                val types = root.getJSONArray("types")
+                val ftype = JSONObject(types[0].toString()).getString("type")
+                val stype = try { JSONObject(types[1].toString()).getString("type") } catch (e: JSONException) {""}
+
+                Pokemon(
+                    root.getString("name").capitalize(),
+                    JSONObject(ftype).getString("name").capitalize()
+                )
+            } else {
+                Pokemon("N/A", "N/A")
+            }
+            Log.d("lista", pokemon.nombre)
+            secondaryFragment = fragment_content.newInstance(pokemon)
+            supportFragmentManager.beginTransaction().replace(R.id.mainsecond, secondaryFragment).commit()
+
         }
     }
 

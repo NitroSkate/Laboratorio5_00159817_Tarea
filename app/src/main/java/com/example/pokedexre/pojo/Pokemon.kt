@@ -3,7 +3,7 @@ package com.example.pokedexre.pojo
 import android.os.Parcel
 import android.os.Parcelable
 
-data class Pokemon(val nombre: String, val url: String) : Parcelable {
+data class Pokemon(val nombre: String = "N/A", val url: String = "N/A") : Parcelable {
     constructor(parcel: Parcel) : this(
         nombre = parcel.readString(),
         url = parcel.readString()
@@ -18,13 +18,11 @@ data class Pokemon(val nombre: String, val url: String) : Parcelable {
         return 0
     }
 
-    companion object CREATOR : Parcelable.Creator<Pokemon> {
-        override fun createFromParcel(parcel: Parcel): Pokemon {
-            return Pokemon(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Pokemon?> {
-            return arrayOfNulls(size)
+    companion object {
+        @JvmField val CREATOR = object : Parcelable.Creator<Pokemon>{
+            override fun createFromParcel(parcel: Parcel): Pokemon = Pokemon(parcel)
+            override fun newArray (size: Int): Array<Pokemon?> = arrayOfNulls(size)
         }
     }
+
 }

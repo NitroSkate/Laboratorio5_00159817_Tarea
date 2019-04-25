@@ -33,6 +33,7 @@ class NetworkUtils {
 
     @Throws(IOException::class)
     fun getResponseFromHttpUrl(url: URL): String {
+        Log.d("olv", url.toString())
         val urlConnection = url.openConnection() as HttpURLConnection
         try {
             val `in` = urlConnection.inputStream
