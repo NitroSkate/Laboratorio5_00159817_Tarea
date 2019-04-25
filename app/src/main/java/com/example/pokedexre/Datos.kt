@@ -27,7 +27,9 @@ class Datos : AppCompatActivity() {
 
     fun init(pokemon: Pokemon){
         nombre.text = pokemon.nombre
-        tipo.text = pokemon.url
+        tipo.text = pokemon.ftype
+        tipo2.text = pokemon.stype
+        peso.text = pokemon.weight + " " +  "g"
     }
 
     private inner class FetchTask : AsyncTask<String, Void, String>() {
@@ -58,10 +60,14 @@ class Datos : AppCompatActivity() {
                 val types = root.getJSONArray("types")
                 val ftype = JSONObject(types[0].toString()).getString("type")
                 val stype = try { JSONObject(types[1].toString()).getString("type") } catch (e: JSONException) {""}
+                val weight = root.getString("weight")
 
                 Pokemon(
                     root.getString("name").capitalize(),
-                    JSONObject(ftype).getString("name").capitalize()
+                    "N/A" ,
+                    JSONObject(ftype).getString("name").capitalize(),
+                    if(stype.isEmpty()) "N/A" else JSONObject(stype).getString("name").capitalize(),
+                    weight
                 )
             } else {
                 Pokemon("N/A", "N/A")

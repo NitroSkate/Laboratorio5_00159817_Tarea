@@ -22,7 +22,8 @@ class PokemonAdapter (val items : ArrayList<Pokemon>, val clickListener: (Pokemo
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         fun bind(item: Pokemon, clickListener: (Pokemon) -> Unit) = with(itemView){
             pokemon_name.text = item.nombre
-            pokemon_type.text = item.url
+            pokemon_url.text = item.url
+
             this.setOnClickListener{clickListener(item)}
         }
     }

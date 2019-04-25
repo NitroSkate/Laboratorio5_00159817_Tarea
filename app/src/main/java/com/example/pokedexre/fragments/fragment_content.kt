@@ -43,7 +43,9 @@ class fragment_content : Fragment() {
 
     fun bindData(view: View){
             view.t1.text = pokemon.nombre
-            view.t2.text = pokemon.url
+            view.t2.text = pokemon.ftype
+            view.t3.text = pokemon.stype
+            view.t4.text = pokemon.weight + " "  + "g"
     }
 
 

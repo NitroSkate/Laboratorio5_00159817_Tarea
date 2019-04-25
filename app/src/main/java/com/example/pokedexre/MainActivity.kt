@@ -96,7 +96,10 @@ class MainActivity : AppCompatActivity(), list_fragment.PokeListener {
                     pokelist.add(
                         Pokemon(
                             result.getString("name").capitalize(),
-                            result.getString("url")
+                            result.getString("url"),
+                            "N/A",
+                            "N/A",
+                            "N/A"
                         )
                     )
                     Log.d("alv", pokelist[i].nombre)
@@ -142,10 +145,14 @@ class MainActivity : AppCompatActivity(), list_fragment.PokeListener {
                 val types = root.getJSONArray("types")
                 val ftype = JSONObject(types[0].toString()).getString("type")
                 val stype = try { JSONObject(types[1].toString()).getString("type") } catch (e: JSONException) {""}
+                val weight = root.getString("weight")
 
                 Pokemon(
                     root.getString("name").capitalize(),
-                    JSONObject(ftype).getString("name").capitalize()
+                    "N/A",
+                    JSONObject(ftype).getString("name").capitalize(),
+                    if(stype.isEmpty()) "N/A" else JSONObject(stype).getString("name").capitalize(),
+                    weight
                 )
             } else {
                 Pokemon("N/A", "N/A")
