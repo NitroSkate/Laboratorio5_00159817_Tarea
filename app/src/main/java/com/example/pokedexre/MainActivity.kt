@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity(), list_fragment.PokeListener {
     private lateinit var mainFragment : list_fragment
     private lateinit var secondaryFragment : fragment_content
     var pokelist = ArrayList<Pokemon>()
+    //Funcional
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
